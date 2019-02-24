@@ -3,8 +3,8 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		int noBlueCars = 20;
-		int noRedCars = 15;
+		final int noBlueCars = 20;
+		final int noRedCars = 15;
 		
 		int frequenceOfArrival = 2000; //milis
 		int crossingTime = 200; //milis
@@ -14,30 +14,32 @@ public class Main {
 		Bridge.getInstace().setMaxNoOfCrossingCar(maxNoOfCrossingCars);
 		Bridge.getInstace().setCrossingTime(crossingTime);
 		
-		int id = 1;
-		while(true) {
-					
-			if(noBlueCars > 0) {
-				new BlueCar(id).start();
-				noBlueCars--;
-			}
-			
-			if(noRedCars > 0) {
-				new RedCar(id).start();
-				noRedCars--;
-			}
-			
-			id++;
-			
-			if(noRedCars == 0 && noBlueCars == 0)
-				break;		
-			
-			try {
-				Thread.sleep(frequenceOfArrival);
-			} catch (InterruptedException e) {}
-		}
+	
 		
-		System.out.println("Bye Bye from main.");
+		new Thread(new Runnable() {
+			public void run() {
+				for(int i=0; i<noBlueCars; i++) {
+					new BlueCar(i+1).start();
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {}
+				}
+			}
+		}).start();
+		
+		
+		new Thread(new Runnable() {
+			public void run() {
+				for(int i=0; i<noRedCars; i++) {
+					new RedCar(i+1).start();
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {}
+				}
+			}
+		}).start();;
+		
+		//System.out.println("Bye Bye from main.");
 		
  	}
 

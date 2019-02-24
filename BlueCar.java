@@ -21,6 +21,11 @@ public class BlueCar extends Thread  {
 		System.out.println("Blue Car "+id+": entered");
 		
 		try {
+			System.out.println("Blue Car "+id+": crossing");
+			sleep(bridge.getCrossingTime());
+		} catch (InterruptedException e1) {}
+		
+		try {
 			bridge.blueCarExit();
 		} catch (InterruptedException e) {}
 		
