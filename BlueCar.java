@@ -4,16 +4,26 @@ public class BlueCar extends Thread  {
 	private long id;
 	private Bridge bridge;
 	
-	public BlueCar(long id,Bridge bridge) {
+	public BlueCar(long id) {
 		this.id = id;
-		this.bridge = bridge;
+		this.bridge = Bridge.getInstace();
 	}
 	
 	public long getId() {
 		return id;
 	}
 	
-	public void run() {
-		  
+	public void run() {		
+		System.out.println("Blue Car "+id+": arrived");
+		try {
+			bridge.blueCarEnter();
+		} catch (InterruptedException e) {}
+		System.out.println("Blue Car "+id+": entered");
+		
+		try {
+			bridge.blueCarExit();
+		} catch (InterruptedException e) {}
+		
+		System.out.println("Blue Car "+id+": exited");
     }
 }

@@ -6,21 +6,13 @@ public class Bridge {
 	
 	private int maxNoOfCrossingCars;
 	private int crossingTime;
-	private LinkedList<RedCar> redCars;
-	private LinkedList<BlueCar> blueCars;
+	private int time;
+	private int noBlue , noRed, noBlueWait, noRedWait;
 	
 	private Bridge() {
-		this.redCars = new LinkedList<>();
-		this.blueCars = new LinkedList<>();
-	}
-	
-	
-	public void addBlueCar(BlueCar bcar) {
-		this.blueCars.addFirst(bcar);
-	}
-	
-	public void addRedCar(RedCar rcar) {
-		this.redCars.addFirst(rcar);
+		this.time = 0;
+		this.noBlue = 0;
+		this.noRed = 0;
 	}
 	
 	
@@ -35,6 +27,32 @@ public class Bridge {
 	public void setCrossingTime(int time) {
 		this.crossingTime = time;
 	}
+	
+	synchronized void redCarEnter() throws InterruptedException {
+		
+		while(noBlue>0) wait();
+		noRed++;
+	}
+	
+	synchronized void redCarExit() throws InterruptedException {
+		--noRed;
+		if(noRed==0) notifyAll();
+		
+	}
+	
+	synchronized void blueCarEnter() throws InterruptedException {
+		while(noRed > 0) wait();
+		noBlue++;
+	}
+	
+	synchronized void blueCarExit() throws InterruptedException {
+		--noBlue;
+		if(noBlue > 0) notifyAll();
+		
+	}
+	
+	
+
 	
 	
 	
