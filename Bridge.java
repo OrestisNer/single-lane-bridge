@@ -1,22 +1,24 @@
-import java.util.LinkedList;
+import java.util.concurrent.Semaphore;
 
 public class Bridge {
 	
 	private static Bridge bridgeInstance = new Bridge();
 	
-	private int maxNoOfCrossingCars;
 	private int crossingTime;
 	private int time;
-	private int noBlue , noRed, noBlueWait, noRedWait;
-	private boolean blueturn;
+	private int numBlue , numRed, numBlueWait, numRedWait;
+	private Semaphore lockBlue;
+	private Semaphore lockRed;
 	
 	private Bridge() {
 		this.time = 0;
-		this.noBlue = 0;
-		this.noRed = 0;
-		this.noBlueWait = 0;
-		this.noRedWait = 0;
-		this.blueturn = true;
+		this.numBlue = 0;
+		this.numRed = 0;
+		this.numBlueWait = 0;
+		this.numRedWait = 0;
+		this.lockBlue = new Semaphore(1);
+		this.lockRed = new Semaphore(0);
+		
 	}
 	
 	
@@ -25,7 +27,7 @@ public class Bridge {
 	}
 	
 	public void setMaxNoOfCrossingCar(int max) {
-		this.maxNoOfCrossingCars = max;
+		//lockTurn = new Semaphore(max);
 	}
 	
 	public void setCrossingTime(int crossingTime) {
@@ -36,38 +38,43 @@ public class Bridge {
 		return crossingTime;
 	}
 	
+	public int getTime() {
+		return time;
+	}
+	
 	public void increaseTime() {
 		this.time++;
 	}
 	
-	synchronized void redCarEnter() throws InterruptedException {
-		noRedWait++;
-		//System.out.println("\t\t\t\t\t\t[+Red waiting "+noRedWait+"]");
-		while(noBlue>0) wait();
-		noRedWait--;
-		//System.out.println("\t\t\t\t\t\t[-Red waiting "+noRedWait+"]");
-		noRed++;
+	public void redCarEnter(){
+		numRedWait++;
+		//System.out.println("\t\t\t---NRW:"+numRedWait+"---");
+		try {
+			lockRed.acquire();
+		} catch (InterruptedException e) {}
+		numRedWait--;
+		numRed++;
 	}
 	
-	synchronized void redCarExit() throws InterruptedException {
-		--noRed;
-		if(noRed==0) notifyAll();
+	public void redCarExit(){
+		--numRed;
+		lockBlue.release();
 		
 	}
 	
-	synchronized void blueCarEnter() throws InterruptedException {
-		noBlueWait++;
-		//System.out.println("[+Blue waiting "+noBlueWait+"]");
-		while(noRed > 0) wait();
-		noBlueWait--;
-		//System.out.println("[-Blue waiting "+noBlueWait+"]");
-		noBlue++;
+	public void blueCarEnter(){
+		numBlueWait++;
+		//System.out.println("\t\t\t---NBW:"+numBlueWait+"---");
+		try {
+			lockBlue.acquire();
+		} catch (InterruptedException e) {}
+		numBlueWait--;
+		numBlue++;
 	}
 	
-	synchronized void blueCarExit() throws InterruptedException {
-		noBlue--;
-		if(noBlue == 0) notifyAll();
-		
+	public void blueCarExit(){
+		lockRed.release();
+		numBlue--;
 	}
 	
 	

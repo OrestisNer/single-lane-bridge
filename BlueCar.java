@@ -14,21 +14,17 @@ public class BlueCar extends Thread  {
 	}
 	
 	public void run() {		
-		System.out.println("Blue Car "+id+": arrived");
-		try {
-			bridge.blueCarEnter();
-		} catch (InterruptedException e) {}
-		System.out.println("Blue Car "+id+": entered");
+		System.out.println("Blue Car "+id+": arrived at: "+ bridge.getTime());
+		bridge.blueCarEnter();
+		System.out.println("Blue Car "+id+": entered at: "+ bridge.getTime());
 		
 		try {
-			System.out.println("Blue Car "+id+": crossing");
+			System.out.println("Blue Car "+id+": crossing at: "+ bridge.getTime());
 			sleep(bridge.getCrossingTime());
 		} catch (InterruptedException e1) {}
+		Bridge.getInstace().increaseTime();
+		bridge.blueCarExit();
 		
-		try {
-			bridge.blueCarExit();
-		} catch (InterruptedException e) {}
-		
-		System.out.println("Blue Car "+id+": exited");
+		System.out.println("Blue Car "+id+": exited at: "+ bridge.getTime());
     }
 }
