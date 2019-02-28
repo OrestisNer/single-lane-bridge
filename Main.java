@@ -4,7 +4,9 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		final int noBlueCars = 15;
+		
+		//Variables will be given by user
+		final int noBlueCars = 25;
 		final int noRedCars = 20;
 		
 		int frequenceOfArrival = 2000; //milis
@@ -15,14 +17,15 @@ public class Main {
 		Bridge.getInstace().setMaxNoOfCrossingCar(maxNoOfCrossingCars);
 		Bridge.getInstace().setCrossingTime(crossingTime);
 		
-		
+		//Create two threads that will creating Cars(Threads) asynchronously
 		new Thread(new Runnable() {
 			public void run() {
 				for(int i=0; i<noBlueCars; i++) {
 					Bridge.getInstace().increaseTime();
 					new BlueCar(i+1).start();
+					//Frequence of car arrival
 					try {
-						Thread.sleep(400);
+						Thread.sleep(1200);
 					} catch (InterruptedException e) {}
 				}
 			}
@@ -34,8 +37,9 @@ public class Main {
 				for(int i=0; i<noRedCars; i++) {
 					Bridge.getInstace().increaseTime();
 					new RedCar(i+1).start();
+					//Frequence of car arrival
 					try {
-						Thread.sleep(500);
+						Thread.sleep(1200);
 					} catch (InterruptedException e) {}
 				}
 			}

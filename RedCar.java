@@ -23,10 +23,9 @@ public class RedCar extends Thread{
 			System.out.println("\t\t\t\t\t\tRed Car "+id+": crossing at: "+ bridge.getTime());
 			sleep(bridge.getCrossingTime());
 		} catch (InterruptedException e1) {}
-		Bridge.getInstace().increaseTime();
-		bridge.redCarExit();
-		
+		//Bridge.getInstace().increaseTime();
 		System.out.println("\t\t\t\t\t\tRed Car "+id+": exited at: "+ bridge.getTime());
+		bridge.redCarExit();
     }
 	
 	
