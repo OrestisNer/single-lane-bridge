@@ -14,12 +14,13 @@ public class Main {
 		final int noBlueCars = Integer.parseInt(args[1]);
 		final int noRedCars = Integer.parseInt(args[2]);
 		
-		int frequenceOfArrival = Integer.parseInt(args[3]); //milis
-		int crossingTime = Integer.parseInt(args[4]); //milis
+		int freqBlueCar = Integer.parseInt(args[3]); //milis
+		int freqRedCar = Integer.parseInt(args[4]); //milis
+		int crossingTime = Integer.parseInt(args[5]); //milis
 		int maxNoOfCrossingCars = 0;
 		
-		if(args.length == 6)
-			maxNoOfCrossingCars = Integer.parseInt(args[5]);
+		if(args.length > 6)
+			maxNoOfCrossingCars = Integer.parseInt(args[6]);
 		
 		initialiazeBridge(bridgeImplementation);
 		bridge.setMaxNoOfCrossingCar(maxNoOfCrossingCars);
@@ -32,7 +33,7 @@ public class Main {
 					new BlueCar(i+1,bridge).start();
 					//Frequence of car arrival
 					try {
-						Thread.sleep(frequenceOfArrival);
+						Thread.sleep(freqBlueCar);
 					} catch (InterruptedException e) {}
 				}
 			}
@@ -45,7 +46,7 @@ public class Main {
 					new RedCar(i+1,bridge).start();
 					//Frequence of car arrival
 					try {
-						Thread.sleep(frequenceOfArrival);
+						Thread.sleep(freqRedCar);
 					} catch (InterruptedException e) {}
 				}
 			}
@@ -57,24 +58,24 @@ public class Main {
 	
 	private static boolean isInputsValid(String args[]) {
 		
-		if(args.length >4) {
+		if(args.length >5) {
 			List<String> validBridgeNames = Arrays.asList("unsafe", "safe", "switch","fair");
 			if(!validBridgeNames.contains(args[0])) {
-				System.out.println("Wrong bridge name.");
+				System.out.println("------Wrong bridge name.------");
 				printExecutionFormat();
 				return false;
 			}
 			
 			for(int i=1; i<args.length; i++) {
 				if(!args[i].chars().allMatch( Character::isDigit )) {
-					System.out.println("Argument "+i+" should be a number");
+					System.out.println("------Argument "+i+" should be a number------");
 					printExecutionFormat();
 					return false;
 				}
 			}
 			return true;
 		}
-		System.out.println("Wrong Number of arguments.");
+		System.out.println("------Wrong Number of arguments.------");
 		printExecutionFormat();
 		return false;
 		
@@ -85,10 +86,11 @@ public class Main {
 		System.out.println("[+] First Argument is the bridge type : {\"unsafe\", \"safe\", \"switch\",\"fair\"}");
 		System.out.println("[+] Second Argument is the number of blue cars.");
 		System.out.println("[+] Third Argument is the number of red cars.");
-		System.out.println("[+] Fourth Argument is the frequence of car arrivals. (millis)");
-		System.out.println("[+] Fifth Argument is the bridge crossing time. (millis)");
-		System.out.println("[+] Sixth Argument **Only for fair bridge** is the maximum number of cars crossing the bridge.");
-		System.out.println("[+] E.g : java Main fair 20 30 400 600 5 ");		
+		System.out.println("[+] Fourth Argument is the frequence of Blue car arrival. (millis)");
+		System.out.println("[+] Fifth Argument is the frequence of Red car arrival. (millis)");
+		System.out.println("[+] Sixth Argument is the bridge crossing time. (millis)");
+		System.out.println("[+] Seventh Argument **Only for fair & switch bridge** is the maximum number of cars crossing the bridge.");
+		System.out.println("[+] E.g : java Main fair 20 30 200 800 600 5 ");		
 	}
 	
 	private static void initialiazeBridge(String bridgeImplementation) {
