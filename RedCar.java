@@ -1,4 +1,8 @@
-
+/**
+ * @author Nerantzis R. Orestis
+ * 
+ * Class that represents Red Cars.
+ */
 public class RedCar extends Thread{
 	
 	private long id;
@@ -13,6 +17,16 @@ public class RedCar extends Thread{
 		return id;
 	}
 	
+	/**
+	 * Method that is triggering when a new red Car (thread)
+	 * is creating. 
+	 * The car makes three actions
+	 *     > Enter Bridge 
+	 *     > Cross Bridge
+	 *     > Exit Bridge
+	 * 
+	 * Bridge Implementation will handle the time of each action.
+	 */
 	public void run() {		
 		System.out.println("\t\t\t\t\t\tRed Car "+id+": arrived.");
 		bridge.redCarEnter();

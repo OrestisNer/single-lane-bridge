@@ -2,18 +2,21 @@ import java.util.concurrent.Semaphore;
 
 /**
  * 
- * @author Orestis
+ * @author Nerantzis R. Orestis
  * Class that implements Singleton Pattern
- * Bridge is the class that simulates the bridge which we want to secure.
- * In real life problems bridge could be a memory or a variable etc.
+ * 
+ * Fair Bridge will handle all the cars in the most fair way.
+ * In dense movement will alternately let car crossing the bridge.
+ * When the movement is not dense then will give priority 
+ * to cars that the number is higher.
+ * 
  */
 public class FairBridge extends Bridge{
 	
 	private static FairBridge bridgeInstance = new FairBridge();
 	
-	private int crossingTime;
-	private int numBlueCrossing , numRedCrossing, numBlueWaiting, numRedWaiting;
-	private Semaphore lockBlue ,lockRed , lockMaxBlue, lockMaxRed;
+	private int numBlueWaiting, numRedWaiting;
+	private Semaphore lockBlue ,lockRed;
 	private int maxNumberOfCrossingCars;
 	
 	//Private constructor to ensure that only one instance of bridge will exist
@@ -27,7 +30,6 @@ public class FairBridge extends Bridge{
 		
 	}
 	
-	//Method to access Bridge instance.
 	public static FairBridge getInstace() {
 		return bridgeInstance;
 	}
@@ -36,18 +38,12 @@ public class FairBridge extends Bridge{
 		maxNumberOfCrossingCars = max;
 	}
 	
-	public void setCrossingTime(int crossingTime) {
-		this.crossingTime = crossingTime;
-	}
-	
-	public int getCrossingTime() {
-		return crossingTime;
-	}
-		
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void redCarEnter(){
 		numRedWaiting++;
-		//Red car will pass instantly if none blue car is waiting neither is on bridge. 
+		//Pass instantly if none blue car is waiting neither is on bridge. 
 		if(numBlueWaiting > 0 || numBlueCrossing > 0) {
 			try {
 				System.out.println("\t\t\t\t\t\tRed Waiting");
@@ -59,30 +55,34 @@ public class FairBridge extends Bridge{
 		numRedCrossing++;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void redCarExit(){
 		System.out.println("\t\t\t\t\t\tRed Releasing");
 		if(numBlueWaiting == 0)
 			lockRed.release();
 		--numRedCrossing;
+		//Taking Action only when the bridge is empty
 		if(numRedCrossing == 0) {
-			// Αν τα κόκκινα που περιμένουν είναι παραπάνω από το max δώσε προτεραιότητα
+			// Let blue cars pass if num of waiting is greater than max
 			if(numBlueWaiting >= maxNumberOfCrossingCars) 
 				lockBlue.release(maxNumberOfCrossingCars);
-			//Αν τα κοκκίνα δεν είναι παραπάνω αλλά είναι τα μπλε δώσε στα μπλε
+			//Let red cars pass if blue is no higher than max but red is.
 			else if(numRedWaiting >=maxNumberOfCrossingCars) 
 				lockRed.release(maxNumberOfCrossingCars);
-			// Αν κανένα δεν είναι πάνω από το μαξ δώσε σε αυτό με το μεγαλύτερο προτεραιότητα
+			// if none of them are higher than max let the greater between them.
 			else if(numBlueWaiting > numRedWaiting)
 				lockBlue.release(numBlueWaiting);
 			else if(numBlueWaiting < numRedWaiting)
 				lockRed.release(numRedWaiting);
-			//αν δεν περιμένει κανένα αρχικοποίεισαι τα semaphores
+			// if bridge is empty , initialize 
 			else if (numBlueWaiting==0 && numRedWaiting==0){
 				this.lockBlue = new Semaphore(0);
 				this.lockRed = new Semaphore(0);
-			// είναι ίσα αλλά λίγότερο από το max
+			//Else Let Blue 
 			}else {
-				lockBlue.release(numRedWaiting);
+				lockBlue.release(numBlueWaiting);
 			}
 				
 		}
@@ -91,9 +91,12 @@ public class FairBridge extends Bridge{
 		
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void blueCarEnter(){
 		numBlueWaiting++;
-		//Blue car will pass instantly if none red car is waiting neither is on bridge. 
+		//Pass instantly if none red car is waiting neither is on bridge. 
 		if(numRedWaiting > 0 || numRedCrossing>0) {
 			try {
 				System.out.println("Blue Waiting");
@@ -105,41 +108,39 @@ public class FairBridge extends Bridge{
 		numBlueCrossing++;
 	}
 	
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void blueCarExit(){
 		System.out.println("Blue Releasing");
 		if(numRedWaiting == 0)
 			lockBlue.release();
-		//When a blue car exit the bridge release RED semaphore so a red car can enter the bridge.
 		numBlueCrossing--;
-		//Παίρνει τις αποφάσεις όταν τελειώσει η διέλευση
+		//Taking Action only when the bridge is empty
 		if(numBlueCrossing == 0) {
-			// Αν τα κόκκινα που περιμένουν είναι παραπάνω από το max δώσε προτεραιότητα
+			// Let red cars pass if num of waiting is greater than max
 			if(numRedWaiting >= maxNumberOfCrossingCars) {
 				lockRed.release(maxNumberOfCrossingCars);
-				System.out.println("-------release from 1");
 			}
-			//Αν τα κοκκίνα δεν είναι παραπάνω αλλά είναι τα μπλε δώσε στα μπλε
+			//Let blue cars pass if red is no higher than max but blue is.
 			else if(numBlueWaiting >=maxNumberOfCrossingCars) {
 				lockBlue.release(maxNumberOfCrossingCars);
-				System.out.println("-------release from 2");
 			}
-			// Αν κανένα δεν είναι πάνω από το μαξ δώσε σε αυτό με το μεγαλύτερο προτεραιότητα
+			// if none of them are higher than max let the greater between them.
 			else if(numBlueWaiting > numRedWaiting) {
 				lockBlue.release(numBlueWaiting);
-				System.out.println("-------release from 3");
 			}
 			else if(numBlueWaiting < numRedWaiting) {
 				lockRed.release(numRedWaiting);
-				System.out.println("-------release from 4");
 			}
-			//αν δεν περιμένει κανένα αρχικοποίεισαι τα semaphores
+			// if bridge is empty , initialize 
 			else if (numBlueWaiting==0 && numRedWaiting==0){
 				this.lockBlue = new Semaphore(0);
 				this.lockRed = new Semaphore(0);
-			// είναι ίσα λίγότερο από το max
+			//Else Let Red 
 			}else {
 				lockRed.release(numRedWaiting);
-				System.out.println("-------release from 5");
 			}
 				
 		}

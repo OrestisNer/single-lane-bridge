@@ -1,3 +1,11 @@
+/***
+ * @author Nerantzis R. Orestis
+ * Guided from https://www.doc.ic.ac.uk/~jnm/book/book_applets/SingleLaneBridge.html
+ * 
+ * Java program that simulates Single Lane Bridge problem.
+ * 
+ */
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -55,7 +63,12 @@ public class Main {
 		
  	}
 	
-	
+	/**
+	 * 
+	 * @param args : program arguments
+	 * @return true  if arguments are valid.
+	 *         false if not 
+	 */
 	private static boolean isInputsValid(String args[]) {
 		
 		if(args.length >5) {
@@ -81,6 +94,9 @@ public class Main {
 		
 	}
 	
+	/**
+	 * Message for Execution Format
+	 */
 	private static void printExecutionFormat() {
 		System.out.println("[+] Wrong Format");
 		System.out.println("[+] First Argument is the bridge type : {\"unsafe\", \"safe\", \"switch\",\"fair\"}");
@@ -93,6 +109,12 @@ public class Main {
 		System.out.println("[+] E.g : java Main fair 20 30 200 800 600 5 ");		
 	}
 	
+	/**
+	 * 
+	 * @param bridgeImplementation : the bridge tha will implement
+	 * 
+	 * This method initial the bridge based on program arguments.
+	 */
 	private static void initialiazeBridge(String bridgeImplementation) {
 		switch(bridgeImplementation) {
 			case "unsafe":
@@ -103,6 +125,9 @@ public class Main {
 				break;
 			case "safe":
 				bridge = SafeBridge.getInstace();
+				break;
+			case "switch":
+				bridge = SwitchBridge.getInstace();
 				break;
 		}
 	}

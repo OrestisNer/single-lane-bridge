@@ -1,17 +1,26 @@
+/**
+ * @author Nerantzis R. Orestis
+ * Class that implements Singleton Pattern
+ * 
+ * Safe Bridge will handle all the cars safe
+ * but in an unfair way.
+ * 
+ * To ensure that bridge is safe a Semaphore is
+ * used. When a car enters acquires the semaphore
+ * and when leaving releases it.
+ */
 import java.util.concurrent.Semaphore;
 
 public class SafeBridge extends Bridge {
 	
 private static SafeBridge bridgeInstance = new SafeBridge();
 	
-	private int crossingTime;
-	private int numBlue , numRed;
 	private Semaphore lock;
 	
 	//Private constructor to ensure that only one instance of bridge will exist
 	private SafeBridge() {
-		this.numBlue = 0;
-		this.numRed = 0;
+		this.numBlueCrossing = 0;
+		this.numRedCrossing = 0;
 		this.lock = new Semaphore(1);
 		
 	}
@@ -20,20 +29,10 @@ private static SafeBridge bridgeInstance = new SafeBridge();
 	public static SafeBridge getInstace() {
 		return bridgeInstance;
 	}
-	
-	public void setMaxNoOfCrossingCar(int max) {
-		//lockTurn = new Semaphore(max);
-	}
-	
-	public void setCrossingTime(int crossingTime) {
-		this.crossingTime = crossingTime;
-	}
-	
-	public int getCrossingTime() {
-		return crossingTime;
-	}
-		
-	
+			
+	/**
+	 * {@inheritDoc}
+	 */
 	public void redCarEnter(){
 		try {
 			System.out.println("\t\t\t\t\t\tRed Waiting");
@@ -42,25 +41,34 @@ private static SafeBridge bridgeInstance = new SafeBridge();
 		} catch (InterruptedException e) {}
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void redCarExit(){
 		System.out.println("\t\t\t\t\t\tRed Releasing");
 		lock.release();
-		--numRed;		
+		--numRedCrossing;		
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void blueCarEnter(){
 		try {
 			System.out.println("Blue Waiting");
 			lock.acquire();
 			System.out.println("Blue stop Waiting");
 		} catch (InterruptedException e) {}
-		numBlue++;
+		numBlueCrossing++;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void blueCarExit(){
 		System.out.println("Blue Releasing");
 		lock.release();
-		numBlue--;
+		numBlueCrossing--;
 	}	
 
 }

@@ -1,4 +1,8 @@
-
+/**
+ * @author Nerantzis R. Orestis
+ * 
+ * Class that represents Blue Cars.
+ */
 public class BlueCar extends Thread  {
 	
 	private long id;
@@ -13,6 +17,16 @@ public class BlueCar extends Thread  {
 		return id;
 	}
 	
+	/**
+	 * Method that is triggering when a new blue Car (thread)
+	 * is creating. 
+	 * The car makes three actions
+	 *     > Enter Bridge 
+	 *     > Cross Bridge
+	 *     > Exit Bridge
+	 * 
+	 * Bridge Implementation will handle the time of each action.
+	 */
 	public void run() {		
 		System.out.println("Blue Car "+id+": arrived.");
 		bridge.blueCarEnter();
@@ -21,7 +35,6 @@ public class BlueCar extends Thread  {
 			System.out.println("Blue Car "+id+": crossing.");
 			sleep(bridge.getCrossingTime());
 		} catch (InterruptedException e1) {}
-		//Bridge.getInstace().increaseTime();
 		System.out.println("Blue Car "+id+": exited.");
 		bridge.blueCarExit();
     }
