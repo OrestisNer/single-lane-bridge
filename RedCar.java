@@ -4,9 +4,9 @@ public class RedCar extends Thread{
 	private long id;
 	private Bridge bridge;
 	
-	public RedCar(long id) {
+	public RedCar(long id,Bridge bridge) {
 		this.id = id;
-		this.bridge = Bridge.getInstace();
+		this.bridge = bridge;
 	}
 	
 	public long getId() {
@@ -14,17 +14,14 @@ public class RedCar extends Thread{
 	}
 	
 	public void run() {		
-		System.out.println("\t\t\t\t\t\tRed Car "+id+": arrived at: "+ bridge.getTime());
+		System.out.println("\t\t\t\t\t\tRed Car "+id+": arrived.");
 		bridge.redCarEnter();
-		
-		System.out.println("\t\t\t\t\t\tRed Car "+id+": entered at: "+ bridge.getTime());
-		
+		System.out.println("\t\t\t\t\t\tRed Car "+id+": entered.");
 		try {
-			System.out.println("\t\t\t\t\t\tRed Car "+id+": crossing at: "+ bridge.getTime());
+			System.out.println("\t\t\t\t\t\tRed Car "+id+": crossing.");
 			sleep(bridge.getCrossingTime());
 		} catch (InterruptedException e1) {}
-		//Bridge.getInstace().increaseTime();
-		System.out.println("\t\t\t\t\t\tRed Car "+id+": exited at: "+ bridge.getTime());
+		System.out.println("\t\t\t\t\t\tRed Car "+id+": exited.");
 		bridge.redCarExit();
     }
 	
