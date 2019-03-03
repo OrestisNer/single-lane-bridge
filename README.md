@@ -1,7 +1,7 @@
 # single-lane-bridge
 
-##@author Nerantzis R. Orestis
-###Guided from https://www.doc.ic.ac.uk/~jnm/book/book_applets/SingleLaneBridge.html
+@author Nerantzis R. Orestis
+Guided from https://www.doc.ic.ac.uk/~jnm/book/book_applets/SingleLaneBridge.html
 
 Java program that simulates Single Lane Bridge problem.
  
